@@ -1,0 +1,176 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: antiquewhite;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 25px;
+}
+
+/* Profile Image */
+.image img {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #0077ff;
+    display: block;
+    margin: auto;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.image img:hover{
+    transform: scale(1.08);
+    box-shadow: 0 4px 16px black;
+}
+
+/* Bio Section */
+.bio {
+    width: 85%;
+    max-width: 750px;
+    background: white;
+    padding: 25px;
+    margin-top: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 20px rgba(0,0,0,0.1);
+}
+
+.bio h3 {
+    text-align: center;
+    font-size: 28px;
+    color: #222;
+}
+
+.bio p {
+    text-align: justify;
+    line-height: 1.6;
+    font-size: 16px;
+    margin-top: 12px;
+}
+
+/* Skills Section */
+.skills {
+    width: 85%;
+    max-width: 750px;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    margin-top: 20px;
+    box-shadow: 0px 4px 20px rgba(0,0,0,0.1);
+}
+
+.skills h4 {
+    margin-bottom: 10px;
+    font-size: 22px;
+    color: #222;
+}
+
+.skills ul {
+    margin-left: 18px;
+    line-height: 1.7;
+}
+
+/* Contact Button */
+.Contact {
+    margin-top: 20px;
+}
+
+.Contact button {
+    background-color: #0077ff;
+    color: white;
+    padding: 12px 25px;
+    font-size: 17px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.Contact button:hover {
+    background-color: #005fcc;
+    transform: scale(1.05);
+}
+
+/* ===== Responsive ===== */
+
+/* Mobile */
+@media (max-width: 600px) {
+    .bio, .skills {
+        width: 95%;
+    }
+
+    .bio h3 {
+        font-size: 24px;
+    }
+}
+
+/* Tablet */
+@media (min-width: 601px) and (max-width: 900px) {
+    .bio, .skills {
+        width: 90%;
+    }
+}
+
+/* Popup overlay */
+.popup {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
+    justify-content: center;
+    align-items: center;
+}
+
+/* Popup box */
+.popup-content {
+    background: white;
+    padding: 30px;
+    width: 300px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.popup h3 {
+    margin-bottom: 15px;
+}
+
+/* Buttons inside popup */
+.popup-btn {
+    display: block;
+    background: #0077ff;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 6px;
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.popup-btn:hover {
+    background: #005fcc;
+}
+
+/* Close button */
+.close-btn {
+    background: red;
+    color: white;
+    margin-top: 10px;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
