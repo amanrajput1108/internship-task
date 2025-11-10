@@ -1,61 +1,66 @@
-// ---------------------- IMPORTS ----------------------
 const express = require("express");
 const mysql = require("mysql2");
+const bcrypt = require("bcryptjs");
 const cors = require("cors");
 
-// ---------------------- APP CONFIG -------------------
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ---------------------- DATABASE CONNECTION ----------
+// ✅ MySQL Database Connection
 const db = mysql.createConnection({
-    host: "localhost",
-    user: "root",        // ✅ change if your MySQL user is different
-    password: "Aman@1108",  // ✅ put your MySQL password
-    database: "userdb"       // ✅ your database name
+    host: "127.0.0.1",
+    user: "root",
+    password: "Aman@1108", // 👉 Put your MySQL password here (if any)
+    database: "userdb"
 });
 
-// Testing DB connection
 db.connect((err) => {
-    if (err) {
-        console.error("❌ Database connection failed:", err);
-    } else {
-        console.log("✅ Database connected successfully");
-    }
+    if (err) throw err;
+    console.log("✅ Database Connected!");
+
+    db.query("SHOW TABLES", (err, result) => {
+    console.log("📌 Tables in DB:", result);
+  });
 });
 
-// ---------------------- API ROUTE --------------------
-app.post("/register", (req, res) => {
-    const { name, email, password, phone } = req.body;
+// ✅ API: Register User
+app.post("/api/register", (req, res) => {
+    const { fullName, email, password, phone } = req.body;
 
-    if (!name || !email || !password || !phone) {
-        return res.status(400).json({ message: "All fields are required" });
+    // ✅ Validation
+    if (!fullName || !email || !password || !phone) {
+        return res.json({ success: false, message: "⚠ All fields are required!" });
     }
 
-    // check if email already exists
-    const checkEmail = "SELECT email FROM users WHERE email = ?";
-    db.query(checkEmail, [email], (err, result) => {
-        if (err) return res.status(500).json({ message: "DB error!", error: err });
+    if (password.length < 6) {
+        return res.json({ success: false, message: "⚠ Password must be at least 6 characters!" });
+    }
 
-        if (result.length > 0) {
-            return res.status(400).json({ message: "Email already exists!" });
-        }
+    if (!/^\d{10}$/.test(phone)) {
+        return res.json({ success: false, message: "⚠ Phone must be a 10-digit number!" });
+    }
 
-        const sql = "INSERT INTO users (name, email, password, phone) VALUES (?, ?, ?, ?)";
+    // ✅ Hash Password
+    const hashedPassword = bcrypt.hashSync(password, 8);
 
-        db.query(sql, [name, email, password, phone], (err, result) => {
-            if (err) {
-                console.log("Insert Error:", err);
-                return res.status(500).json({ message: "Server error", error: err });
+    const sql = "INSERT INTO users (fullName, email, password, phone) VALUES (?, ?, ?, ?)";
+
+    // ✅ Updated Duplicate Email Check Code (Copy-Paste version)
+    db.query(sql, [fullName, email, hashedPassword, phone], (err, result) => {
+        if (err) {
+            // Check if email already exists
+            if (err.code === "ER_DUP_ENTRY") {
+                return res.json({ success: false, message: "❌ Email already exists!" });
             }
 
-            res.json({ message: "User registered successfully!" });
-        });
+            console.error("Database Error:", err);
+            return res.json({ success: false, message: "⚠ Server error. Try again later!" });
+        }
+
+        return res.json({ success: true, message: "✅ Registration successful!" });
     });
 });
 
-// ---------------------- SERVER START -----------------
-app.listen(5000, () => {
-    console.log("✅ Server running on port 5000");
-});
+// ✅ Server Running
+app.listen(5000, () => console.log("🚀 Server running on port 5000"));
